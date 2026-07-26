@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
    import Home from './pages/Home'
    import Login from './pages/Login'
    import Register from './pages/Register'
+   import PersonalInfoForm from './pages/PersonalInfoForm'
 
    function App() {
      return (
@@ -12,6 +13,7 @@ import { Routes, Route } from 'react-router-dom'
            <Route path="/" element={<Home />} />
            <Route path="/login" element={<Login />} />
            <Route path="/register" element={<Register />} />
+           <Route path="/personal-info" element={<PersonalInfoForm />} />
          </Routes>
        </>
      )
