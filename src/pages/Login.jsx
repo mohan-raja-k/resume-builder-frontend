@@ -1,12 +1,10 @@
 import { useState } from 'react'
 import api from '../api/axiosConfig'
-import { useNavigate } from 'react-router-dom'
 
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -28,7 +26,7 @@ function Login() {
       })
       localStorage.setItem('userId', userResponse.data.id)
 
-      navigate('/')
+      window.location.href = '/'
     } catch (err) {
       setError('Login failed. Please try again.')
       console.error(err)
