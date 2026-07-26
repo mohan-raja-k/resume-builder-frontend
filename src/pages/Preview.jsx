@@ -13,7 +13,15 @@ function Preview() {
   const [certifications, setCertifications] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const resumeRef = useRef()
+
+  const containerRef = useRef()
+  const headerRef = useRef()
+  const summaryRef = useRef()
+  const workExperienceRef = useRef()
+  const educationRef = useRef()
+  const skillsRef = useRef()
+  const projectsRef = useRef()
+  const certificationsRef = useRef()
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -56,34 +64,62 @@ function Preview() {
   }, [])
 
   const handleDownload = async () => {
-    const element = resumeRef.current
-    if (!element) {
-      console.error('resumeRef.current is null')
+    if (!containerRef.current) {
+      console.error('containerRef.current is null')
       return
     }
 
     try {
-      const canvas = await html2canvas(element, { scale: 2 })
-      const imgData = canvas.toDataURL('image/jpeg', 0.98)
+      await document.fonts.ready
+
+      const sectionRefs = [
+        headerRef,
+        summaryRef,
+        workExperienceRef,
+        educationRef,
+        skillsRef,
+        projectsRef,
+        certificationsRef,
+      ].filter((ref) => ref.current)
 
       const pdf = new jsPDF('p', 'in', 'letter')
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = pdf.internal.pageSize.getHeight()
+      const pageWidth = pdf.internal.pageSize.getWidth()
+      const pageHeight = pdf.internal.pageSize.getHeight()
+      const margin = 0.5
+      const usableWidth = pageWidth - margin * 2
+      const usableHeight = pageHeight - margin * 2
 
-      const imgWidth = pdfWidth
-      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      let cursorY = margin
+      let isFirstPage = true
 
-      let heightLeft = imgHeight
-      let position = 0
+      for (const ref of sectionRefs) {
+        const canvas = await html2canvas(ref.current, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          windowWidth: 900,
+        })
 
-      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight)
-      heightLeft -= pdfHeight
+        const imgData = canvas.toDataURL('image/jpeg', 0.98)
+        const imgWidth = usableWidth
+        const imgHeight = (canvas.height * imgWidth) / canvas.width
 
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight
-        pdf.addPage()
-        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight)
-        heightLeft -= pdfHeight
+        // If this section doesn't fit in the remaining space on the current page,
+        // start a new page (unless it's the very first section on the first page).
+        if (!isFirstPage || cursorY + imgHeight > margin + usableHeight) {
+          if (cursorY !== margin || !isFirstPage) {
+            if (cursorY + imgHeight > margin + usableHeight && cursorY !== margin) {
+              pdf.addPage()
+              cursorY = margin
+            }
+          }
+        }
+
+        pdf.addImage(imgData, 'JPEG', margin, cursorY, imgWidth, imgHeight)
+        cursorY += imgHeight + 0.25 // small gap between sections
+
+        isFirstPage = false
       }
 
       pdf.save(`${personalInfo?.fullName || 'resume'}.pdf`)
@@ -113,11 +149,11 @@ function Preview() {
           </button>
         </div>
 
-        <div ref={resumeRef} className="bg-white shadow-md rounded-lg p-10">
+        <div ref={containerRef} className="bg-white shadow-md rounded-lg p-10">
 
           {/* Personal Info */}
           {personalInfo && (
-            <div className="mb-8 text-center border-b pb-6">
+            <div ref={headerRef} className="mb-8 text-center border-b pb-6">
               <h1 className="text-3xl font-bold text-gray-800">{personalInfo.fullName}</h1>
               <p className="text-gray-600 mt-1">
                 {personalInfo.email} {personalInfo.phoneNumber && `• ${personalInfo.phoneNumber}`} {personalInfo.location && `• ${personalInfo.location}`}
@@ -130,7 +166,7 @@ function Preview() {
 
           {/* Professional Summary */}
           {summary && summary.description && (
-            <div className="mb-8">
+            <div ref={summaryRef} className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Professional Summary</h2>
               <p className="text-gray-700">{summary.description}</p>
             </div>
@@ -138,7 +174,7 @@ function Preview() {
 
           {/* Work Experience */}
           {workExperience.length > 0 && (
-            <div className="mb-8">
+            <div ref={workExperienceRef} className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Work Experience</h2>
               {workExperience.map((exp) => (
                 <div key={exp.id} className="mb-4">
@@ -156,7 +192,7 @@ function Preview() {
 
           {/* Education */}
           {education.length > 0 && (
-            <div className="mb-8">
+            <div ref={educationRef} className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Education</h2>
               {education.map((edu) => (
                 <div key={edu.id} className="mb-4">
@@ -173,25 +209,25 @@ function Preview() {
           )}
 
           {/* Skills */}
-{skills.length > 0 && (
-  <div className="mb-8">
-    <h2 className="text-xl font-semibold text-gray-800 mb-3 border-b pb-1">Skills</h2>
-    <div className="flex flex-wrap gap-2.5">
-      {skills.map((skill) => (
-        <span
-          key={skill.id}
-          className="inline-flex items-center justify-center bg-blue-50 text-blue-700 border border-blue-200 text-sm font-medium px-4 py-1.5 rounded-md"
-        >
-          {skill.skillName}
-        </span>
-      ))}
-    </div>
-  </div>
-)}
+          {skills.length > 0 && (
+            <div ref={skillsRef} className="mb-8">
+              <h2 className="text-xl font-semibold text-gray-800 mb-3 border-b pb-1">Skills</h2>
+              <div className="flex flex-wrap gap-2.5">
+                {skills.map((skill) => (
+                  <span
+                    key={skill.id}
+                    className="inline-flex items-center justify-center bg-blue-50 text-blue-700 border border-blue-200 text-sm font-medium px-4 py-1.5 rounded-md"
+                  >
+                    {skill.skillName}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Projects */}
           {projects.length > 0 && (
-            <div className="mb-8">
+            <div ref={projectsRef} className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Projects</h2>
               {projects.map((proj) => (
                 <div key={proj.id} className="mb-4">
@@ -210,7 +246,7 @@ function Preview() {
 
           {/* Certifications */}
           {certifications.length > 0 && (
-            <div>
+            <div ref={certificationsRef}>
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Certifications</h2>
               {certifications.map((cert) => (
                 <div key={cert.id} className="mb-2">
