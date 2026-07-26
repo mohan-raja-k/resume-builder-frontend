@@ -10,6 +10,7 @@ import { Routes, Route } from 'react-router-dom'
    import ProjectsForm from './pages/ProjectsForm'
   import CertificationsForm from './pages/CertificationsForm'
   import ProfessionalSummaryForm from './pages/ProfessionalSummaryForm'
+  import Preview from './pages/Preview'
 
    function App() {
      return (
@@ -26,6 +27,7 @@ import { Routes, Route } from 'react-router-dom'
 <Route path="/projects" element={<ProjectsForm />} />
 <Route path="/certifications" element={<CertificationsForm />} />
 <Route path="/professional-summary" element={<ProfessionalSummaryForm />} />
+<Route path="/preview" element={<Preview />} />
          </Routes>
        </>
      )
