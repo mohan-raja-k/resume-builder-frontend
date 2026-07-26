@@ -164,11 +164,11 @@ function Preview() {
           {/* Personal Info */}
           {personalInfo && (
             <div ref={headerRef} className="mb-8 text-center border-b pb-6">
-              <h1 className="text-3xl font-bold text-gray-800">{personalInfo.fullName}</h1>
-              <p className="text-gray-600 mt-1">
+              <h1 className="text-3xl font-bold text-gray-800 break-words">{personalInfo.fullName}</h1>
+              <p className="text-gray-600 mt-1 break-words">
                 {personalInfo.email} {personalInfo.phoneNumber && `• ${personalInfo.phoneNumber}`} {personalInfo.location && `• ${personalInfo.location}`}
               </p>
-              <p className="text-blue-600 text-sm mt-1">
+              <p className="text-blue-600 text-sm mt-1 break-words">
                 {personalInfo.linkedInProfile} {personalInfo.gitHubProfile && `• ${personalInfo.gitHubProfile}`}
               </p>
             </div>
@@ -178,7 +178,7 @@ function Preview() {
           {summary && summary.description && (
             <div ref={summaryRef} className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Professional Summary</h2>
-              <p className="text-gray-700">{summary.description}</p>
+              <p className="text-gray-700 break-words">{summary.description}</p>
             </div>
           )}
 
@@ -188,13 +188,13 @@ function Preview() {
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Work Experience</h2>
               {workExperience.map((exp) => (
                 <div key={exp.id} className="mb-4">
-                  <div className="flex justify-between">
-                    <h3 className="font-medium text-gray-800">{exp.jobTitle} — {exp.companyName}</h3>
-                    <span className="text-sm text-gray-500">
+                  <div className="flex justify-between flex-wrap gap-x-2">
+                    <h3 className="font-medium text-gray-800 break-words">{exp.jobTitle} — {exp.companyName}</h3>
+                    <span className="text-sm text-gray-500 whitespace-nowrap">
                       {exp.startDate} – {exp.endDate || 'Present'}
                     </span>
                   </div>
-                  <p className="text-gray-600 text-sm mt-1">{exp.description}</p>
+                  <p className="text-gray-600 text-sm mt-1 break-words">{exp.description}</p>
                 </div>
               ))}
             </div>
@@ -206,13 +206,13 @@ function Preview() {
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Education</h2>
               {education.map((edu) => (
                 <div key={edu.id} className="mb-4">
-                  <div className="flex justify-between">
-                    <h3 className="font-medium text-gray-800">{edu.degree} — {edu.institutionName}</h3>
-                    <span className="text-sm text-gray-500">
+                  <div className="flex justify-between flex-wrap gap-x-2">
+                    <h3 className="font-medium text-gray-800 break-words">{edu.degree} — {edu.institutionName}</h3>
+                    <span className="text-sm text-gray-500 whitespace-nowrap">
                       {edu.startYear} – {edu.endYear || 'Present'}
                     </span>
                   </div>
-                  <p className="text-gray-600 text-sm mt-1">{edu.field} {edu.grade && `• Grade: ${edu.grade}`}</p>
+                  <p className="text-gray-600 text-sm mt-1 break-words">{edu.field} {edu.grade && `• Grade: ${edu.grade}`}</p>
                 </div>
               ))}
             </div>
@@ -226,7 +226,7 @@ function Preview() {
                 {skills.map((skill) => (
                   <span
                     key={skill.id}
-                    className="inline-flex items-center justify-center bg-blue-50 text-blue-700 border border-blue-200 text-sm font-medium px-4 py-1.5 rounded-md mr-2.5 mb-2.5"
+                    className="inline-flex items-center justify-center bg-blue-50 text-blue-700 border border-blue-200 text-sm font-medium px-4 py-1.5 rounded-md mr-2.5 mb-2.5 break-words max-w-full"
                   >
                     {skill.skillName}
                   </span>
@@ -241,11 +241,11 @@ function Preview() {
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Projects</h2>
               {projects.map((proj) => (
                 <div key={proj.id} className="mb-4">
-                  <h3 className="font-medium text-gray-800">{proj.title}</h3>
-                  <p className="text-gray-600 text-sm mt-1">{proj.description}</p>
-                  <p className="text-gray-500 text-xs mt-1">Tech: {proj.techStack}</p>
+                  <h3 className="font-medium text-gray-800 break-words">{proj.title}</h3>
+                  <p className="text-gray-600 text-sm mt-1 break-words">{proj.description}</p>
+                  <p className="text-gray-500 text-xs mt-1 break-words">Tech: {proj.techStack}</p>
                   {proj.projectLink && proj.projectLink !== 'null' && (
-                    <a href={proj.projectLink} className="text-blue-600 text-sm underline" target="_blank" rel="noreferrer">
+                    <a href={proj.projectLink} className="text-blue-600 text-sm underline break-words" target="_blank" rel="noreferrer">
                       {proj.projectLink}
                     </a>
                   )}
@@ -260,8 +260,8 @@ function Preview() {
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Certifications</h2>
               {certifications.map((cert) => (
                 <div key={cert.id} className="mb-2">
-                  <p className="text-gray-800 font-medium">{cert.certificationName}</p>
-                  <p className="text-gray-500 text-sm">{cert.issuedBy} {cert.year && `• ${cert.year}`}</p>
+                  <p className="text-gray-800 font-medium break-words">{cert.certificationName}</p>
+                  <p className="text-gray-500 text-sm break-words">{cert.issuedBy} {cert.year && `• ${cert.year}`}</p>
                 </div>
               ))}
             </div>
