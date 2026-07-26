@@ -76,15 +76,11 @@ function Preview() {
     try {
       await document.fonts.ready
 
-      // Force a fixed desktop-like width so layout (flex, wrapping, spacing)
-      // is IDENTICAL regardless of the device/screen this is generated on
+      // Force a fixed desktop-like width so layout is identical regardless
+      // of the device/screen this is generated on
       container.style.width = '800px'
       container.style.maxWidth = '800px'
-
-      // Let the browser actually reflow to the new width before capturing
       await new Promise((resolve) => setTimeout(resolve, 150))
-      window.scrollTo(0, 0)
-      await new Promise((resolve) => setTimeout(resolve, 100))
 
       const sectionRefs = [
         headerRef,
@@ -108,11 +104,22 @@ function Preview() {
       for (const ref of sectionRefs) {
         const el = ref.current
 
+        // CRITICAL: scroll this exact section fully into view BEFORE capturing it,
+        // so nothing below the current viewport gets clipped or rendered blank
+        el.scrollIntoView({ block: 'start', behavior: 'instant' })
+        await new Promise((resolve) => setTimeout(resolve, 120))
+
+        // Explicitly measure the real full height of this element right now,
+        // instead of letting html2canvas guess based on the viewport
+        const fullHeight = Math.ceil(el.getBoundingClientRect().height) + 4
+
         const canvas = await html2canvas(el, {
           scale: 2,
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
+          height: fullHeight,
+          windowHeight: fullHeight + 400,
         })
 
         const imgData = canvas.toDataURL('image/jpeg', 0.98)
@@ -133,9 +140,9 @@ function Preview() {
     } catch (err) {
       console.error('PDF generation failed:', err)
     } finally {
-      // ALWAYS restore the original responsive width, even if something failed
       container.style.width = originalWidth
       container.style.maxWidth = originalMaxWidth
+      window.scrollTo(0, 0)
     }
   }
 
