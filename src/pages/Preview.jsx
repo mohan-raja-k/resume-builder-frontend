@@ -15,13 +15,6 @@ function Preview() {
   const [error, setError] = useState('')
 
   const containerRef = useRef()
-  const headerRef = useRef()
-  const summaryRef = useRef()
-  const workExperienceRef = useRef()
-  const educationRef = useRef()
-  const skillsRef = useRef()
-  const projectsRef = useRef()
-  const certificationsRef = useRef()
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -76,21 +69,22 @@ function Preview() {
     try {
       await document.fonts.ready
 
-      // Force a fixed desktop-like width so layout is identical regardless
-      // of the device/screen this is generated on
+      // Force a fixed desktop-like width so layout is identical on any device
       container.style.width = '800px'
       container.style.maxWidth = '800px'
-      await new Promise((resolve) => setTimeout(resolve, 150))
+      window.scrollTo(0, 0)
+      await new Promise((resolve) => setTimeout(resolve, 200))
 
-      const sectionRefs = [
-        headerRef,
-        summaryRef,
-        workExperienceRef,
-        educationRef,
-        skillsRef,
-        projectsRef,
-        certificationsRef,
-      ].filter((ref) => ref.current)
+      // Capture the ENTIRE resume as ONE image — no per-section scrolling,
+      // no per-section height guessing, nothing can go missing this way
+      const canvas = await html2canvas(container, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        windowWidth: container.scrollWidth,
+        windowHeight: container.scrollHeight,
+      })
 
       const pdf = new jsPDF('p', 'in', 'letter')
       const pageWidth = pdf.internal.pageSize.getWidth()
@@ -99,40 +93,37 @@ function Preview() {
       const usableWidth = pageWidth - margin * 2
       const usableHeight = pageHeight - margin * 2
 
-      let cursorY = margin
+      // How many source canvas pixels correspond to one inch on the PDF page
+      const pxPerInch = canvas.width / usableWidth
+      const pageHeightPx = Math.floor(usableHeight * pxPerInch)
 
-      for (const ref of sectionRefs) {
-        const el = ref.current
+      // Slice the single big canvas into page-sized chunks
+      let renderedHeight = 0
+      let pageNum = 0
 
-        // CRITICAL: scroll this exact section fully into view BEFORE capturing it,
-        // so nothing below the current viewport gets clipped or rendered blank
-        el.scrollIntoView({ block: 'start', behavior: 'instant' })
-        await new Promise((resolve) => setTimeout(resolve, 120))
+      while (renderedHeight < canvas.height) {
+        const sliceHeight = Math.min(pageHeightPx, canvas.height - renderedHeight)
 
-        // Explicitly measure the real full height of this element right now,
-        // instead of letting html2canvas guess based on the viewport
-        const fullHeight = Math.ceil(el.getBoundingClientRect().height) + 4
+        const pageCanvas = document.createElement('canvas')
+        pageCanvas.width = canvas.width
+        pageCanvas.height = sliceHeight
+        const ctx = pageCanvas.getContext('2d')
+        ctx.fillStyle = '#ffffff'
+        ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height)
+        ctx.drawImage(
+          canvas,
+          0, renderedHeight, canvas.width, sliceHeight, // source rect
+          0, 0, canvas.width, sliceHeight // destination rect
+        )
 
-        const canvas = await html2canvas(el, {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: '#ffffff',
-          height: fullHeight,
-          windowHeight: fullHeight + 400,
-        })
+        const imgData = pageCanvas.toDataURL('image/jpeg', 0.98)
+        const imgHeightIn = sliceHeight / pxPerInch
 
-        const imgData = canvas.toDataURL('image/jpeg', 0.98)
-        const imgWidth = usableWidth
-        const imgHeight = (canvas.height * imgWidth) / canvas.width
+        if (pageNum > 0) pdf.addPage()
+        pdf.addImage(imgData, 'JPEG', margin, margin, usableWidth, imgHeightIn)
 
-        if (cursorY + imgHeight > margin + usableHeight && cursorY !== margin) {
-          pdf.addPage()
-          cursorY = margin
-        }
-
-        pdf.addImage(imgData, 'JPEG', margin, cursorY, imgWidth, imgHeight)
-        cursorY += imgHeight + 0.25
+        renderedHeight += sliceHeight
+        pageNum++
       }
 
       pdf.save(`${personalInfo?.fullName || 'resume'}.pdf`)
@@ -142,7 +133,6 @@ function Preview() {
     } finally {
       container.style.width = originalWidth
       container.style.maxWidth = originalMaxWidth
-      window.scrollTo(0, 0)
     }
   }
 
@@ -170,7 +160,7 @@ function Preview() {
 
           {/* Personal Info */}
           {personalInfo && (
-            <div ref={headerRef} className="mb-8 text-center border-b pb-6">
+            <div className="mb-8 text-center border-b pb-6">
               <h1 className="text-3xl font-bold text-gray-800 break-words">{personalInfo.fullName}</h1>
               <p className="text-gray-600 mt-1 break-words">
                 {personalInfo.email} {personalInfo.phoneNumber && `• ${personalInfo.phoneNumber}`} {personalInfo.location && `• ${personalInfo.location}`}
@@ -183,7 +173,7 @@ function Preview() {
 
           {/* Professional Summary */}
           {summary && summary.description && (
-            <div ref={summaryRef} className="mb-8">
+            <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Professional Summary</h2>
               <p className="text-gray-700 break-words">{summary.description}</p>
             </div>
@@ -191,7 +181,7 @@ function Preview() {
 
           {/* Work Experience */}
           {workExperience.length > 0 && (
-            <div ref={workExperienceRef} className="mb-8">
+            <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Work Experience</h2>
               {workExperience.map((exp) => (
                 <div key={exp.id} className="mb-4">
@@ -209,7 +199,7 @@ function Preview() {
 
           {/* Education */}
           {education.length > 0 && (
-            <div ref={educationRef} className="mb-8">
+            <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Education</h2>
               {education.map((edu) => (
                 <div key={edu.id} className="mb-4">
@@ -227,7 +217,7 @@ function Preview() {
 
           {/* Skills */}
           {skills.length > 0 && (
-            <div ref={skillsRef} className="mb-8">
+            <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-3 border-b pb-1">Skills</h2>
               <div className="flex flex-wrap">
                 {skills.map((skill) => (
@@ -244,7 +234,7 @@ function Preview() {
 
           {/* Projects */}
           {projects.length > 0 && (
-            <div ref={projectsRef} className="mb-8">
+            <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Projects</h2>
               {projects.map((proj) => (
                 <div key={proj.id} className="mb-4">
@@ -263,7 +253,7 @@ function Preview() {
 
           {/* Certifications */}
           {certifications.length > 0 && (
-            <div ref={certificationsRef}>
+            <div>
               <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Certifications</h2>
               {certifications.map((cert) => (
                 <div key={cert.id} className="mb-2">
