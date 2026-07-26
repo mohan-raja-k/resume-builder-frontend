@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom'
    import Login from './pages/Login'
    import Register from './pages/Register'
    import PersonalInfoForm from './pages/PersonalInfoForm'
+   import EducationForm from './pages/EducationForm'
 
    function App() {
      return (
@@ -14,6 +15,7 @@ import { Routes, Route } from 'react-router-dom'
            <Route path="/login" element={<Login />} />
            <Route path="/register" element={<Register />} />
            <Route path="/personal-info" element={<PersonalInfoForm />} />
+           <Route path="/education" element={<EducationForm />} />
          </Routes>
        </>
      )
