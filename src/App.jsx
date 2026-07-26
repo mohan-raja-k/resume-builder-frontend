@@ -5,6 +5,11 @@ import { Routes, Route } from 'react-router-dom'
    import Register from './pages/Register'
    import PersonalInfoForm from './pages/PersonalInfoForm'
    import EducationForm from './pages/EducationForm'
+   import SkillsForm from './pages/SkillsForm'
+   import WorkExperienceForm from './pages/WorkExperienceForm'
+   import ProjectsForm from './pages/ProjectsForm'
+  import CertificationsForm from './pages/CertificationsForm'
+  import ProfessionalSummaryForm from './pages/ProfessionalSummaryForm'
 
    function App() {
      return (
@@ -16,6 +21,11 @@ import { Routes, Route } from 'react-router-dom'
            <Route path="/register" element={<Register />} />
            <Route path="/personal-info" element={<PersonalInfoForm />} />
            <Route path="/education" element={<EducationForm />} />
+           <Route path="/skills" element={<SkillsForm />} />
+           <Route path="/work-experience" element={<WorkExperienceForm />} />
+<Route path="/projects" element={<ProjectsForm />} />
+<Route path="/certifications" element={<CertificationsForm />} />
+<Route path="/professional-summary" element={<ProfessionalSummaryForm />} />
          </Routes>
        </>
      )
