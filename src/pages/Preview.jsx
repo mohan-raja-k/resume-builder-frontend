@@ -257,6 +257,7 @@ function Preview() {
                   <p className="text-gray-500 text-xs mt-1 break-words">Tech: {proj.techStack}</p>
                   {proj.projectLink && proj.projectLink !== 'null' && (
                     
+                      <a
                       href={proj.projectLink}
                       className="text-blue-600 text-sm mt-1 inline-block break-words"
                       style={{ textDecoration: 'underline' }}
