@@ -22,6 +22,12 @@ function Login() {
       }
 
       localStorage.setItem('token', response.data)
+
+      const userResponse = await api.get('/users/findByMail', {
+        params: { email },
+      })
+      localStorage.setItem('userId', userResponse.data.id)
+
       navigate('/')
     } catch (err) {
       setError('Login failed. Please try again.')
