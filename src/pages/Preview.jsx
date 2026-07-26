@@ -154,16 +154,16 @@ function Preview() {
         <div ref={containerRef} className="bg-white shadow-md rounded-lg p-10">
 
           {personalInfo && (
-            <div className="mb-6 text-center pb-5 border-b-2 border-gray-800">
-              <h1 className="text-3xl font-extrabold text-gray-900 tracking-wide break-words uppercase">
+            <div style={{ marginBottom: '24px', textAlign: 'center', paddingBottom: '20px', borderBottom: '2px solid #1f2937' }}>
+              <h1 style={{ fontSize: '28px', fontWeight: 800, color: '#111827', letterSpacing: '0.05em', textTransform: 'uppercase', wordBreak: 'break-word' }}>
                 {personalInfo.fullName}
               </h1>
-              <p className="text-gray-600 mt-2 break-words">
+              <p style={{ color: '#4b5563', marginTop: '8px', wordBreak: 'break-word' }}>
                 {personalInfo.email}{' '}
                 {personalInfo.phoneNumber && `• ${personalInfo.phoneNumber}`}{' '}
                 {personalInfo.location && `• ${personalInfo.location}`}
               </p>
-              <p className="text-blue-600 text-sm mt-1 break-words">
+              <p style={{ color: '#2563eb', fontSize: '14px', marginTop: '4px', wordBreak: 'break-word' }}>
                 {personalInfo.linkedInProfile}{' '}
                 {personalInfo.gitHubProfile && `• ${personalInfo.gitHubProfile}`}
               </p>
@@ -171,30 +171,30 @@ function Preview() {
           )}
 
           {summary && summary.description && (
-            <div className="mb-6">
-              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+            <div style={{ marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', paddingBottom: '4px', marginBottom: '12px', borderBottom: '1px solid #9ca3af' }}>
                 Professional Summary
               </h2>
-              <p className="text-gray-700 break-words leading-relaxed">{summary.description}</p>
+              <p style={{ color: '#374151', wordBreak: 'break-word', lineHeight: 1.6 }}>{summary.description}</p>
             </div>
           )}
 
           {workExperience.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+            <div style={{ marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', paddingBottom: '4px', marginBottom: '12px', borderBottom: '1px solid #9ca3af' }}>
                 Work Experience
               </h2>
               {workExperience.map((exp) => (
-                <div key={exp.id} className="mb-4">
-                  <div className="flex justify-between flex-wrap gap-x-2">
-                    <h3 className="font-semibold text-gray-800 break-words">
+                <div key={exp.id} style={{ marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0 8px' }}>
+                    <h3 style={{ fontWeight: 600, color: '#1f2937', wordBreak: 'break-word' }}>
                       {exp.jobTitle} — {exp.companyName}
                     </h3>
-                    <span className="text-sm text-gray-500 whitespace-nowrap">
+                    <span style={{ fontSize: '14px', color: '#6b7280', whiteSpace: 'nowrap' }}>
                       {exp.startDate} – {exp.endDate || 'Present'}
                     </span>
                   </div>
-                  <p className="text-gray-600 text-sm mt-1 break-words leading-relaxed">
+                  <p style={{ color: '#4b5563', fontSize: '14px', marginTop: '4px', wordBreak: 'break-word', lineHeight: 1.6 }}>
                     {exp.description}
                   </p>
                 </div>
@@ -203,21 +203,21 @@ function Preview() {
           )}
 
           {education.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+            <div style={{ marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', paddingBottom: '4px', marginBottom: '12px', borderBottom: '1px solid #9ca3af' }}>
                 Education
               </h2>
               {education.map((edu) => (
-                <div key={edu.id} className="mb-4">
-                  <div className="flex justify-between flex-wrap gap-x-2">
-                    <h3 className="font-semibold text-gray-800 break-words">
+                <div key={edu.id} style={{ marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0 8px' }}>
+                    <h3 style={{ fontWeight: 600, color: '#1f2937', wordBreak: 'break-word' }}>
                       {edu.degree} — {edu.institutionName}
                     </h3>
-                    <span className="text-sm text-gray-500 whitespace-nowrap">
+                    <span style={{ fontSize: '14px', color: '#6b7280', whiteSpace: 'nowrap' }}>
                       {edu.startYear} – {edu.endYear || 'Present'}
                     </span>
                   </div>
-                  <p className="text-gray-600 text-sm mt-1 break-words">
+                  <p style={{ color: '#4b5563', fontSize: '14px', marginTop: '4px', wordBreak: 'break-word' }}>
                     {edu.field} {edu.grade && `• Grade: ${edu.grade}`}
                   </p>
                 </div>
@@ -226,15 +226,30 @@ function Preview() {
           )}
 
           {skills.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+            <div style={{ marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', paddingBottom: '4px', marginBottom: '12px', borderBottom: '1px solid #9ca3af' }}>
                 Skills
               </h2>
-              <div className="flex flex-wrap">
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {skills.map((skill) => (
                   <span
                     key={skill.id}
-                    className="inline-flex items-center justify-center bg-blue-50 text-blue-700 border border-blue-200 text-sm font-semibold px-4 py-1.5 rounded-lg mr-2.5 mb-2.5 break-words max-w-full"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: '#eff6ff',
+                      color: '#1d4ed8',
+                      border: '1px solid #bfdbfe',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      padding: '6px 16px',
+                      borderRadius: '8px',
+                      marginRight: '10px',
+                      marginBottom: '10px',
+                      wordBreak: 'break-word',
+                      maxWidth: '100%',
+                    }}
                   >
                     {skill.skillName}
                   </span>
@@ -244,23 +259,21 @@ function Preview() {
           )}
 
           {projects.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+            <div style={{ marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', paddingBottom: '4px', marginBottom: '12px', borderBottom: '1px solid #9ca3af' }}>
                 Projects
               </h2>
               {projects.map((proj) => (
-                <div key={proj.id} className="mb-4">
-                  <h3 className="font-semibold text-gray-800 break-words">{proj.title}</h3>
-                  <p className="text-gray-600 text-sm mt-1 break-words leading-relaxed">
+                <div key={proj.id} style={{ marginBottom: '16px' }}>
+                  <h3 style={{ fontWeight: 600, color: '#1f2937', wordBreak: 'break-word' }}>{proj.title}</h3>
+                  <p style={{ color: '#4b5563', fontSize: '14px', marginTop: '4px', wordBreak: 'break-word', lineHeight: 1.6 }}>
                     {proj.description}
                   </p>
-                  <p className="text-gray-500 text-xs mt-1 break-words">Tech: {proj.techStack}</p>
+                  <p style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px', wordBreak: 'break-word' }}>Tech: {proj.techStack}</p>
                   {proj.projectLink && proj.projectLink !== 'null' && (
                     
-                      <a
                       href={proj.projectLink}
-                      className="text-blue-600 text-sm mt-1 inline-block break-words"
-                      style={{ textDecoration: 'underline' }}
+                      style={{ color: '#2563eb', fontSize: '14px', marginTop: '4px', display: 'inline-block', wordBreak: 'break-word', textDecoration: 'underline' }}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -274,13 +287,13 @@ function Preview() {
 
           {certifications.length > 0 && (
             <div>
-              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', paddingBottom: '4px', marginBottom: '12px', borderBottom: '1px solid #9ca3af' }}>
                 Certifications
               </h2>
               {certifications.map((cert) => (
-                <div key={cert.id} className="mb-3">
-                  <p className="text-gray-800 font-semibold break-words">{cert.certificationName}</p>
-                  <p className="text-gray-500 text-sm break-words">
+                <div key={cert.id} style={{ marginBottom: '12px' }}>
+                  <p style={{ color: '#1f2937', fontWeight: 600, wordBreak: 'break-word' }}>{cert.certificationName}</p>
+                  <p style={{ color: '#6b7280', fontSize: '14px', wordBreak: 'break-word' }}>
                     {cert.issuedBy} {cert.year && `• ${cert.year}`}
                   </p>
                 </div>
