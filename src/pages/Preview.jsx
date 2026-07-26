@@ -69,14 +69,11 @@ function Preview() {
     try {
       await document.fonts.ready
 
-      // Force a fixed desktop-like width so layout is identical on any device
       container.style.width = '800px'
       container.style.maxWidth = '800px'
       window.scrollTo(0, 0)
       await new Promise((resolve) => setTimeout(resolve, 200))
 
-      // Capture the ENTIRE resume as ONE image — no per-section scrolling,
-      // no per-section height guessing, nothing can go missing this way
       const canvas = await html2canvas(container, {
         scale: 2,
         useCORS: true,
@@ -93,11 +90,9 @@ function Preview() {
       const usableWidth = pageWidth - margin * 2
       const usableHeight = pageHeight - margin * 2
 
-      // How many source canvas pixels correspond to one inch on the PDF page
       const pxPerInch = canvas.width / usableWidth
       const pageHeightPx = Math.floor(usableHeight * pxPerInch)
 
-      // Slice the single big canvas into page-sized chunks
       let renderedHeight = 0
       let pageNum = 0
 
@@ -112,8 +107,8 @@ function Preview() {
         ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height)
         ctx.drawImage(
           canvas,
-          0, renderedHeight, canvas.width, sliceHeight, // source rect
-          0, 0, canvas.width, sliceHeight // destination rect
+          0, renderedHeight, canvas.width, sliceHeight,
+          0, 0, canvas.width, sliceHeight
         )
 
         const imgData = pageCanvas.toDataURL('image/jpeg', 0.98)
@@ -158,11 +153,13 @@ function Preview() {
 
         <div ref={containerRef} className="bg-white shadow-md rounded-lg p-10">
 
-          {/* Personal Info */}
+          {/* Header */}
           {personalInfo && (
-            <div className="mb-8 text-center border-b pb-6">
-              <h1 className="text-3xl font-bold text-gray-800 break-words">{personalInfo.fullName}</h1>
-              <p className="text-gray-600 mt-1 break-words">
+            <div className="mb-6 text-center pb-5 border-b-2 border-gray-800">
+              <h1 className="text-3xl font-extrabold text-gray-900 tracking-wide break-words uppercase">
+                {personalInfo.fullName}
+              </h1>
+              <p className="text-gray-600 mt-2 break-words">
                 {personalInfo.email} {personalInfo.phoneNumber && `• ${personalInfo.phoneNumber}`} {personalInfo.location && `• ${personalInfo.location}`}
               </p>
               <p className="text-blue-600 text-sm mt-1 break-words">
@@ -173,25 +170,29 @@ function Preview() {
 
           {/* Professional Summary */}
           {summary && summary.description && (
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Professional Summary</h2>
-              <p className="text-gray-700 break-words">{summary.description}</p>
+            <div className="mb-6">
+              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+                Professional Summary
+              </h2>
+              <p className="text-gray-700 break-words leading-relaxed">{summary.description}</p>
             </div>
           )}
 
           {/* Work Experience */}
           {workExperience.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Work Experience</h2>
+            <div className="mb-6">
+              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+                Work Experience
+              </h2>
               {workExperience.map((exp) => (
                 <div key={exp.id} className="mb-4">
                   <div className="flex justify-between flex-wrap gap-x-2">
-                    <h3 className="font-medium text-gray-800 break-words">{exp.jobTitle} — {exp.companyName}</h3>
+                    <h3 className="font-semibold text-gray-800 break-words">{exp.jobTitle} — {exp.companyName}</h3>
                     <span className="text-sm text-gray-500 whitespace-nowrap">
                       {exp.startDate} – {exp.endDate || 'Present'}
                     </span>
                   </div>
-                  <p className="text-gray-600 text-sm mt-1 break-words">{exp.description}</p>
+                  <p className="text-gray-600 text-sm mt-1 break-words leading-relaxed">{exp.description}</p>
                 </div>
               ))}
             </div>
@@ -199,12 +200,14 @@ function Preview() {
 
           {/* Education */}
           {education.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Education</h2>
+            <div className="mb-6">
+              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+                Education
+              </h2>
               {education.map((edu) => (
                 <div key={edu.id} className="mb-4">
                   <div className="flex justify-between flex-wrap gap-x-2">
-                    <h3 className="font-medium text-gray-800 break-words">{edu.degree} — {edu.institutionName}</h3>
+                    <h3 className="font-semibold text-gray-800 break-words">{edu.degree} — {edu.institutionName}</h3>
                     <span className="text-sm text-gray-500 whitespace-nowrap">
                       {edu.startYear} – {edu.endYear || 'Present'}
                     </span>
@@ -217,13 +220,15 @@ function Preview() {
 
           {/* Skills */}
           {skills.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-800 mb-3 border-b pb-1">Skills</h2>
+            <div className="mb-6">
+              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+                Skills
+              </h2>
               <div className="flex flex-wrap">
                 {skills.map((skill) => (
                   <span
                     key={skill.id}
-                    className="inline-flex items-center justify-center bg-blue-50 text-blue-700 border border-blue-200 text-sm font-medium px-4 py-1.5 rounded-md mr-2.5 mb-2.5 break-words max-w-full"
+                    className="inline-flex items-center justify-center bg-blue-50 text-blue-700 border border-blue-200 text-sm font-semibold px-4 py-1.5 rounded-lg mr-2.5 mb-2.5 break-words max-w-full"
                   >
                     {skill.skillName}
                   </span>
@@ -234,15 +239,23 @@ function Preview() {
 
           {/* Projects */}
           {projects.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Projects</h2>
+            <div className="mb-6">
+              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+                Projects
+              </h2>
               {projects.map((proj) => (
                 <div key={proj.id} className="mb-4">
-                  <h3 className="font-medium text-gray-800 break-words">{proj.title}</h3>
-                  <p className="text-gray-600 text-sm mt-1 break-words">{proj.description}</p>
+                  <h3 className="font-semibold text-gray-800 break-words">{proj.title}</h3>
+                  <p className="text-gray-600 text-sm mt-1 break-words leading-relaxed">{proj.description}</p>
                   <p className="text-gray-500 text-xs mt-1 break-words">Tech: {proj.techStack}</p>
                   {proj.projectLink && proj.projectLink !== 'null' && (
-                    <a href={proj.projectLink} className="text-blue-600 text-sm underline break-words" target="_blank" rel="noreferrer">
+                    
+                      href={proj.projectLink}
+                      className="text-blue-600 text-sm mt-1 inline-block break-words"
+                      style={{ textDecoration: 'underline' }}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       {proj.projectLink}
                     </a>
                   )}
@@ -254,10 +267,12 @@ function Preview() {
           {/* Certifications */}
           {certifications.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-800 mb-2 border-b pb-1">Certifications</h2>
+              <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
+                Certifications
+              </h2>
               {certifications.map((cert) => (
-                <div key={cert.id} className="mb-2">
-                  <p className="text-gray-800 font-medium break-words">{cert.certificationName}</p>
+                <div key={cert.id} className="mb-3">
+                  <p className="text-gray-800 font-semibold break-words">{cert.certificationName}</p>
                   <p className="text-gray-500 text-sm break-words">{cert.issuedBy} {cert.year && `• ${cert.year}`}</p>
                 </div>
               ))}
