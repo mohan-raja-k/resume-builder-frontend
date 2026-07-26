@@ -153,22 +153,23 @@ function Preview() {
 
         <div ref={containerRef} className="bg-white shadow-md rounded-lg p-10">
 
-          {/* Header */}
           {personalInfo && (
             <div className="mb-6 text-center pb-5 border-b-2 border-gray-800">
               <h1 className="text-3xl font-extrabold text-gray-900 tracking-wide break-words uppercase">
                 {personalInfo.fullName}
               </h1>
               <p className="text-gray-600 mt-2 break-words">
-                {personalInfo.email} {personalInfo.phoneNumber && `• ${personalInfo.phoneNumber}`} {personalInfo.location && `• ${personalInfo.location}`}
+                {personalInfo.email}{' '}
+                {personalInfo.phoneNumber && `• ${personalInfo.phoneNumber}`}{' '}
+                {personalInfo.location && `• ${personalInfo.location}`}
               </p>
               <p className="text-blue-600 text-sm mt-1 break-words">
-                {personalInfo.linkedInProfile} {personalInfo.gitHubProfile && `• ${personalInfo.gitHubProfile}`}
+                {personalInfo.linkedInProfile}{' '}
+                {personalInfo.gitHubProfile && `• ${personalInfo.gitHubProfile}`}
               </p>
             </div>
           )}
 
-          {/* Professional Summary */}
           {summary && summary.description && (
             <div className="mb-6">
               <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
@@ -178,7 +179,6 @@ function Preview() {
             </div>
           )}
 
-          {/* Work Experience */}
           {workExperience.length > 0 && (
             <div className="mb-6">
               <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
@@ -187,18 +187,21 @@ function Preview() {
               {workExperience.map((exp) => (
                 <div key={exp.id} className="mb-4">
                   <div className="flex justify-between flex-wrap gap-x-2">
-                    <h3 className="font-semibold text-gray-800 break-words">{exp.jobTitle} — {exp.companyName}</h3>
+                    <h3 className="font-semibold text-gray-800 break-words">
+                      {exp.jobTitle} — {exp.companyName}
+                    </h3>
                     <span className="text-sm text-gray-500 whitespace-nowrap">
                       {exp.startDate} – {exp.endDate || 'Present'}
                     </span>
                   </div>
-                  <p className="text-gray-600 text-sm mt-1 break-words leading-relaxed">{exp.description}</p>
+                  <p className="text-gray-600 text-sm mt-1 break-words leading-relaxed">
+                    {exp.description}
+                  </p>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Education */}
           {education.length > 0 && (
             <div className="mb-6">
               <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
@@ -207,18 +210,21 @@ function Preview() {
               {education.map((edu) => (
                 <div key={edu.id} className="mb-4">
                   <div className="flex justify-between flex-wrap gap-x-2">
-                    <h3 className="font-semibold text-gray-800 break-words">{edu.degree} — {edu.institutionName}</h3>
+                    <h3 className="font-semibold text-gray-800 break-words">
+                      {edu.degree} — {edu.institutionName}
+                    </h3>
                     <span className="text-sm text-gray-500 whitespace-nowrap">
                       {edu.startYear} – {edu.endYear || 'Present'}
                     </span>
                   </div>
-                  <p className="text-gray-600 text-sm mt-1 break-words">{edu.field} {edu.grade && `• Grade: ${edu.grade}`}</p>
+                  <p className="text-gray-600 text-sm mt-1 break-words">
+                    {edu.field} {edu.grade && `• Grade: ${edu.grade}`}
+                  </p>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Skills */}
           {skills.length > 0 && (
             <div className="mb-6">
               <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
@@ -237,7 +243,6 @@ function Preview() {
             </div>
           )}
 
-          {/* Projects */}
           {projects.length > 0 && (
             <div className="mb-6">
               <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
@@ -246,7 +251,9 @@ function Preview() {
               {projects.map((proj) => (
                 <div key={proj.id} className="mb-4">
                   <h3 className="font-semibold text-gray-800 break-words">{proj.title}</h3>
-                  <p className="text-gray-600 text-sm mt-1 break-words leading-relaxed">{proj.description}</p>
+                  <p className="text-gray-600 text-sm mt-1 break-words leading-relaxed">
+                    {proj.description}
+                  </p>
                   <p className="text-gray-500 text-xs mt-1 break-words">Tech: {proj.techStack}</p>
                   {proj.projectLink && proj.projectLink !== 'null' && (
                     
@@ -264,7 +271,6 @@ function Preview() {
             </div>
           )}
 
-          {/* Certifications */}
           {certifications.length > 0 && (
             <div>
               <h2 className="text-lg font-bold text-gray-900 pb-1 mb-3 border-b border-gray-400">
@@ -273,7 +279,9 @@ function Preview() {
               {certifications.map((cert) => (
                 <div key={cert.id} className="mb-3">
                   <p className="text-gray-800 font-semibold break-words">{cert.certificationName}</p>
-                  <p className="text-gray-500 text-sm break-words">{cert.issuedBy} {cert.year && `• ${cert.year}`}</p>
+                  <p className="text-gray-500 text-sm break-words">
+                    {cert.issuedBy} {cert.year && `• ${cert.year}`}
+                  </p>
                 </div>
               ))}
             </div>
