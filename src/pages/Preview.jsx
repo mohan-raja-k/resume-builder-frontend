@@ -72,6 +72,10 @@ function Preview() {
     try {
       await document.fonts.ready
 
+      // Ensure we start capturing from the very top, regardless of current scroll position
+      window.scrollTo(0, 0)
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       const sectionRefs = [
         headerRef,
         summaryRef,
@@ -90,36 +94,34 @@ function Preview() {
       const usableHeight = pageHeight - margin * 2
 
       let cursorY = margin
-      let isFirstPage = true
 
       for (const ref of sectionRefs) {
-        const canvas = await html2canvas(ref.current, {
+        const el = ref.current
+        const fullHeight = Math.ceil(el.scrollHeight) + 4 // small buffer so the last line is never clipped
+
+        const canvas = await html2canvas(el, {
           scale: 2,
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
           windowWidth: 900,
+          windowHeight: fullHeight + 200,
+          height: fullHeight,
+          scrollX: 0,
+          scrollY: 0,
         })
 
         const imgData = canvas.toDataURL('image/jpeg', 0.98)
         const imgWidth = usableWidth
         const imgHeight = (canvas.height * imgWidth) / canvas.width
 
-        // If this section doesn't fit in the remaining space on the current page,
-        // start a new page (unless it's the very first section on the first page).
-        if (!isFirstPage || cursorY + imgHeight > margin + usableHeight) {
-          if (cursorY !== margin || !isFirstPage) {
-            if (cursorY + imgHeight > margin + usableHeight && cursorY !== margin) {
-              pdf.addPage()
-              cursorY = margin
-            }
-          }
+        if (cursorY + imgHeight > margin + usableHeight && cursorY !== margin) {
+          pdf.addPage()
+          cursorY = margin
         }
 
         pdf.addImage(imgData, 'JPEG', margin, cursorY, imgWidth, imgHeight)
-        cursorY += imgHeight + 0.25 // small gap between sections
-
-        isFirstPage = false
+        cursorY += imgHeight + 0.25
       }
 
       pdf.save(`${personalInfo?.fullName || 'resume'}.pdf`)
@@ -212,11 +214,11 @@ function Preview() {
           {skills.length > 0 && (
             <div ref={skillsRef} className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-3 border-b pb-1">Skills</h2>
-              <div className="flex flex-wrap gap-2.5">
+              <div className="flex flex-wrap">
                 {skills.map((skill) => (
                   <span
                     key={skill.id}
-                    className="inline-flex items-center justify-center bg-blue-50 text-blue-700 border border-blue-200 text-sm font-medium px-4 py-1.5 rounded-md"
+                    className="inline-flex items-center justify-center bg-blue-50 text-blue-700 border border-blue-200 text-sm font-medium px-4 py-1.5 rounded-md mr-2.5 mb-2.5"
                   >
                     {skill.skillName}
                   </span>
