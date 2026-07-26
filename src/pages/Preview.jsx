@@ -69,10 +69,20 @@ function Preview() {
       return
     }
 
+    const container = containerRef.current
+    const originalWidth = container.style.width
+    const originalMaxWidth = container.style.maxWidth
+
     try {
       await document.fonts.ready
 
-      // Ensure we start capturing from the very top, regardless of current scroll position
+      // Force a fixed desktop-like width so layout (flex, wrapping, spacing)
+      // is IDENTICAL regardless of the device/screen this is generated on
+      container.style.width = '800px'
+      container.style.maxWidth = '800px'
+
+      // Let the browser actually reflow to the new width before capturing
+      await new Promise((resolve) => setTimeout(resolve, 150))
       window.scrollTo(0, 0)
       await new Promise((resolve) => setTimeout(resolve, 100))
 
@@ -97,18 +107,12 @@ function Preview() {
 
       for (const ref of sectionRefs) {
         const el = ref.current
-        const fullHeight = Math.ceil(el.scrollHeight) + 4 // small buffer so the last line is never clipped
 
         const canvas = await html2canvas(el, {
           scale: 2,
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
-          windowWidth: 900,
-          windowHeight: fullHeight + 200,
-          height: fullHeight,
-          scrollX: 0,
-          scrollY: 0,
         })
 
         const imgData = canvas.toDataURL('image/jpeg', 0.98)
@@ -128,6 +132,10 @@ function Preview() {
       console.log('PDF generated successfully')
     } catch (err) {
       console.error('PDF generation failed:', err)
+    } finally {
+      // ALWAYS restore the original responsive width, even if something failed
+      container.style.width = originalWidth
+      container.style.maxWidth = originalMaxWidth
     }
   }
 
